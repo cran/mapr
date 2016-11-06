@@ -51,11 +51,11 @@ library("spocc")
 
 ```r
 spp <- c('Danaus plexippus', 'Accipiter striatus', 'Pinus contorta')
-dat <- occ(query = spp, from = 'gbif', has_coords = TRUE)
-map_leaflet(dat, dest = ".")
+dat <- occ(query = spp, from = 'gbif', has_coords = TRUE, limit = 50)
+map_leaflet(dat)
 ```
 
-![leafletmap](http://f.cl.ly/items/3w2Y1E3Z0T2T2z40310K/Screen%20Shot%202014-02-09%20at%2010.38.10%20PM.png)
+![leafletmap](http://f.cl.ly/items/3l3e0g3l031e212u0W3G/Screen%20Shot%202016-05-01%20at%2012.32.05%20PM.png)
 
 ### Github gist
 
@@ -74,7 +74,7 @@ map_gist(dat, color = c("#976AAE","#6B944D","#BD5945"))
 
 ```r
 x <- occ(query = 'Lynx rufus californicus', from = 'gbif', limit = 100)
-map_ggmaps(x)
+map_ggmap(x)
 ```
 
 ![ggmaps](http://f.cl.ly/items/1L3r0b3k1W2o1Z3j2I3r/Screen%20Shot%202015-07-02%20at%202.55.59%20PM.png)

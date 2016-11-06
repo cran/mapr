@@ -2,9 +2,10 @@
 % Please edit documentation in R/map_leaflet.R
 \name{map_leaflet}
 \alias{map_leaflet}
-\title{Make an interactive map with Leaflet.js}
+\title{Make interactive maps with Leaflet.js}
 \usage{
-map_leaflet(x, lon = "longitude", lat = "latitude", ...)
+map_leaflet(x, lon = "longitude", lat = "latitude", color = NULL,
+  size = 13, ...)
 }
 \arguments{
 \item{x}{The data. An object of class \code{occdat}, \code{occdatind},
@@ -18,16 +19,29 @@ name (the taxonomic name), latitude (in dec. deg.), longitude (in dec. deg.)}
 unless \code{data.frame} input to \code{x} parameter. We attempt to guess, but
 if nothing close, we stop. Default: \code{longitude} and \code{latitude}}
 
+\item{color}{Default color of your points.}
+
+\item{size}{point size, Default: 13}
+
 \item{...}{Ignored}
 }
+\value{
+a Leaflet map in Viewer in Rstudio, or in your default browser
+otherwise
+}
 \description{
-Make an interactive map with Leaflet.js
+Make interactive maps with Leaflet.js
+}
+\details{
+We add popups by default, and add all columns to the popup. The
+html is escaped with \code{\link[htmltools]{htmlEscape}}
 }
 \examples{
 \dontrun{
 ## spocc
 library("spocc")
-(out <- occ(query='Accipiter striatus', from='gbif', limit=50, has_coords=TRUE))
+(out <- occ(query='Accipiter striatus', from='gbif', limit=50,
+  has_coords=TRUE))
 ### with class occdat
 map_leaflet(out)
 ### with class occdatind
@@ -41,6 +55,7 @@ res <- occ_search(scientificName = "Puma concolor", limit = 100)
 map_leaflet(res)
 
 ## SpatialPoints class
+library("sp")
 df <- data.frame(longitude = c(-120,-121),
                  latitude = c(41, 42), stringsAsFactors = FALSE)
 x <- SpatialPoints(df)
@@ -51,7 +66,7 @@ library("rgbif")
 res <- occ_search(scientificName = "Puma concolor", limit = 100)
 x <- res$data
 library("sp")
-x <- x[complete.cases(x$decimalLatitude, x$decimalLongitude), ]
+x <- x[stats::complete.cases(x$decimalLatitude, x$decimalLongitude), ]
 coordinates(x) <- ~decimalLongitude+decimalLatitude
 map_leaflet(x)
 
@@ -60,6 +75,18 @@ df <- data.frame(name = c('Poa annua', 'Puma concolor'),
                  longitude = c(-120,-121),
                  latitude = c(41, 42), stringsAsFactors = FALSE)
 map_leaflet(df)
+
+# many species
+library("spocc")
+spp <- c('Danaus plexippus', 'Accipiter striatus', 'Pinus contorta')
+dat <- occ(spp, from = 'gbif', limit = 50, has_coords = TRUE)
+map_leaflet(dat)
+map_leaflet(dat, color = c('#AFFF71', '#AFFF71', '#AFFF71'))
+map_leaflet(dat, color = c('#976AAE', '#6B944D', '#BD5945'))
+
+# add a convex hull
+## map_leaflet(dat) \%>\% hull()  # using pipes
+hull(map_leaflet(dat))
 }
 }
 

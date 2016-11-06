@@ -4,8 +4,8 @@
 \alias{map_ggplot}
 \title{ggplot2 mapping}
 \usage{
-map_ggplot(x, map = "world", point_color = "#86161f", lon = "longitude",
-  lat = "latitude", ...)
+map_ggplot(x, map = "world", point_color = "#86161f", color = NULL,
+  size = 3, lon = "longitude", lat = "latitude", ...)
 }
 \arguments{
 \item{x}{The data. An object of class \code{occdat}, \code{occdatind},
@@ -15,9 +15,15 @@ the first two, and \pkg{rgbif} needed for the third. When \code{data.frame}
 input, any number of columns allowed, but with at least the following:
 name (the taxonomic name), latitude (in dec. deg.), longitude (in dec. deg.)}
 
-\item{map}{(character) One of world, world2, state, usa, county, france, italy, or nz}
+\item{map}{(character) One of world, world2, state, usa, county, france,
+italy, or nz}
 
-\item{point_color}{Default color of your points}
+\item{point_color}{Default color of your points. Deprecated, use
+\code{color}}
+
+\item{color}{Default color of your points.}
+
+\item{size}{point size, Default: 3}
 
 \item{lon, lat}{(character) Longitude and latitude variable names. Ignored
 unless \code{data.frame} input to \code{x} parameter. We attempt to guess, but
@@ -32,33 +38,13 @@ A ggplot2 map, of class \code{gg/ggplot}
 ggplot2 mapping
 }
 \examples{
-\dontrun{
-## spocc
-library("spocc")
-dat <- occ(query = 'Lynx rufus californicus', from = 'gbif', limit=100)
-map_ggplot(dat)
-map_ggplot(dat$gbif)
-map_ggplot(dat, "usa")
-map_ggplot(dat, "county")
+# map spocc output, here using a built in object
+data(occdat_eg1)
+map_ggplot(occdat_eg1)
 
-### usage of occ2sp()
-#### SpatialPoints
-spdat <- occ2sp(dat)
-map_ggplot(spdat)
-#### SpatialPointsDataFrame
-spdatdf <- as(spdat, "SpatialPointsDataFrame")
-map_ggplot(spdatdf)
+# map rgbif output, here using a built in object
+data(gbif_eg1)
+map_ggplot(gbif_eg1)
 
-## rgbif
-library("rgbif")
-res <- occ_search(scientificName = "Puma concolor", limit = 100)
-map_ggplot(res)
-
-## data.frame
-df <- data.frame(name = c('Poa annua', 'Puma concolor', 'Foo bar'),
-                 longitude = c(-120, -121, -121),
-                 latitude = c(41, 42, 45), stringsAsFactors = FALSE)
-map_ggplot(df)
-}
 }
 

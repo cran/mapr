@@ -4,22 +4,23 @@
 \name{mapr-package}
 \alias{mapr}
 \alias{mapr-package}
-\title{Vizualize species occurrence data}
+\title{Visualize species occurrence data}
 \description{
-Vizualize species occurrence data
+Visualize species occurrence data
 }
 \section{Many inputs}{
 
 All functions take the following kinds of inputs:
 \itemize{
- \item An object of class \code{occdat}, from the package \pkg{spocc}. An object of
- this class is composed of many objects of class \code{occdatind}
+ \item An object of class \code{occdat}, from the package \pkg{spocc}.
+ An object of this class is composed of many objects of class
+ \code{occdatind}
  \item An object of class \code{occdatind}, from the package \pkg{spocc}
  \item An object of class \code{gbif}, from the package \pkg{rgbif}
- \item An object of class \code{data.frame}. This data.frame can have any columns,
- but must include a column for taxonomic names (e.g., \code{name}), and for latitude
- and longitude (we guess your lat/long columns, starting with the default
- \code{latitude} and \code{longitude})
+ \item An object of class \code{data.frame}. This data.frame can have any
+ columns, but must include a column for taxonomic names (e.g., \code{name}),
+ and for latitude and longitude (we guess your lat/long columns, starting
+ with the default \code{latitude} and \code{longitude})
  \item An object of class \code{SpatialPoints}
  \item An object of class \code{SpatialPointsDatFrame}
 }

@@ -4,7 +4,8 @@
 \alias{map_plot}
 \title{Base R mapping}
 \usage{
-map_plot(x, lon = "longitude", lat = "latitude", ...)
+map_plot(x, lon = "longitude", lat = "latitude", color = NULL, size = 1,
+  pch = 16, hull = FALSE, ...)
 }
 \arguments{
 \item{x}{The data. An object of class \code{occdat}, \code{occdatind},
@@ -18,39 +19,30 @@ name (the taxonomic name), latitude (in dec. deg.), longitude (in dec. deg.)}
 unless \code{data.frame} input to \code{x} parameter. We attempt to guess, but
 if nothing close, we stop. Default: \code{longitude} and \code{latitude}}
 
+\item{color}{Default color of your points.}
+
+\item{size}{point size, Default: 1}
+
+\item{pch}{point symbol shape, Default: 16}
+
+\item{hull}{(logical) whether to add a convex hull. Default: \code{FALSE}}
+
 \item{...}{Further args to \code{\link{points}}}
+}
+\value{
+Plots a world scale map
 }
 \description{
 Base R mapping
 }
 \examples{
-\dontrun{
-## spocc
-library("spocc")
-(out <- occ(query='Accipiter striatus', from='gbif', limit=25, has_coords=TRUE))
-### class occdat
-map_plot(out)
-### class occdatind
-map_plot(out$gbif)
+# map spocc output, here using a built in object
+data(occdat_eg1)
+map_plot(occdat_eg1)
 
-## rgbif
-library("rgbif")
-res <- occ_search(scientificName = "Puma concolor", limit = 100)
-map_plot(res)
+# map rgbif output, here using a built in object
+data(gbif_eg1)
+map_plot(gbif_eg1)
 
-## data.frame
-df <- data.frame(name = c('Poa annua', 'Puma concolor', 'Foo bar'),
-                 longitude = c(-120, -121, -121),
-                 latitude = c(41, 42, 45), stringsAsFactors = FALSE)
-map_plot(df)
-
-### usage of occ2sp()
-#### SpatialPoints
-spdat <- occ2sp(out)
-map_plot(spdat)
-#### SpatialPointsDataFrame
-spdatdf <- as(spdat, "SpatialPointsDataFrame")
-map_plot(spdatdf)
-}
 }
 

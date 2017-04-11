@@ -4,13 +4,13 @@
 #' @template args
 #' @param description Description for the Github gist, or leave to
 #' default (=no description)
-#' @param public (logical) Whether gist is public (default: TRUE)
-#' @param browse If TRUE (default) the map opens in your default browser.
-#' @param ... Further arguments passed on to \code{\link{style_geojson}}
+#' @param public (logical) Whether gist is public (default: `TRUE`)
+#' @param browse If `TRUE` (default) the map opens in your default browser.
+#' @param ... Further arguments passed on to [style_geojson()]
 #'
-#' @details See \code{\link[gistr]{gist_auth}} for help on authentication
+#' @details See [gistr::gist_auth()] for help on authentication
 #'
-#' Does not support adding a convex hull via \code{\link{hull}}
+#' Does not support adding a convex hull via [hull()]
 #'
 #' @examples \dontrun{
 #' ## spocc
@@ -63,8 +63,9 @@ map_gist.occdat <- function(x, description = "", public = TRUE, browse = TRUE,
 }
 
 #' @export
-map_gist.occdatind <- function(x, description = "", public = TRUE, browse = TRUE,
-                               lon = 'longitude', lat = 'latitude', ...) {
+map_gist.occdatind <- function(x, description = "", public = TRUE,
+                               browse = TRUE, lon = 'longitude',
+                               lat = 'latitude', ...) {
   map_gister(spocc::occ2df(x), description, public, browse, ...)
 }
 
@@ -113,10 +114,9 @@ map_gist.default <- function(x, description = "", public = TRUE, browse = TRUE,
 
 # helpers
 map_gister <- function(x, description, public, browse, ...) {
+  x <- x[stats::complete.cases(x$latitude, x$longitude), ]
   datgeojson <- style_geojson(input = x, var = "name", ...)
-  file <- tempfile(fileext = ".csv")
-  utils::write.csv(datgeojson, file)
-  geofile <- togeojson2(file)
+  geofile <- togeojson2(datgeojson)
   gistr::gist_create(geofile, description = description, public = public,
                      browse = browse)
 }

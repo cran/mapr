@@ -40,10 +40,21 @@ Stamen Maps ("stamen"), or CloudMade maps ("cloudmade"). Default: \code{osm}}
 ggpmap visualization of species occurences
 }
 \details{
-Does not support adding a convex hull via \code{\link{hull}}
+Does not support adding a convex hull via \code{\link[=hull]{hull()}}
+}
+\note{
+\strong{BEWARE}: this may error for you with a message like
+\emph{GeomRasterAnn was built with an incompatible version of ggproto}. This
+is fixed in the dev version of \code{ggmap}, but not in the CRAN version.
+Apologies for the problem.
 }
 \examples{
 \dontrun{
+# BEWARE: this may error for you with a message like
+# "GeomRasterAnn was built with an incompatible version of ggproto".
+# This is fixed in the dev version of `ggmap`, but not in the CRAN
+# version. Apologies for the problem.
+
 ## spocc
 library("spocc")
 gd <- occ(query = 'Accipiter striatus', from = 'gbif', limit=75,
@@ -78,4 +89,3 @@ map_ggmap(dat, color = '#6B944D')
 map_ggmap(dat, color = c('#976AAE', '#6B944D', '#BD5945'))
 }
 }
-

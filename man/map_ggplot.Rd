@@ -9,8 +9,9 @@ map_ggplot(x, map = "world", point_color = "#86161f", color = NULL,
 }
 \arguments{
 \item{x}{The data. An object of class \code{occdat}, \code{occdatind},
-\code{gbif}, \code{SpatialPoints}, \code{SpatialPointsDataFrame}, or
-\code{data.frame}. The package \pkg{spocc} needed for
+\code{gbif}, \code{gbif_data}, \code{SpatialPoints}, 
+\code{SpatialPointsDataFrame}, or \code{data.frame}. The package 
+\pkg{spocc} needed for
 the first two, and \pkg{rgbif} needed for the third. When \code{data.frame}
 input, any number of columns allowed, but with at least the following:
 name (the taxonomic name), latitude (in dec. deg.), longitude (in dec. deg.)}
@@ -26,8 +27,9 @@ italy, or nz}
 \item{size}{point size, Default: 3}
 
 \item{lon, lat}{(character) Longitude and latitude variable names. Ignored
-unless \code{data.frame} input to \code{x} parameter. We attempt to guess, but
-if nothing close, we stop. Default: \code{longitude} and \code{latitude}}
+unless \code{data.frame} input to \code{x} parameter. We attempt to guess, 
+but if nothing close, we stop. Default: \code{longitude} and 
+\code{latitude}}
 
 \item{...}{Ignored}
 }
@@ -66,10 +68,22 @@ map_ggplot(spdatdf)
 ## rgbif
 library("rgbif")
 library("ggplot2")
+### occ_search() output
 res <- occ_search(scientificName = "Puma concolor", limit = 100)
 map_ggplot(res)
-## add a convex hull
+
+### occ_data() output
+res <- occ_data(scientificName = "Puma concolor", limit = 100)
+map_ggplot(res)
+
+#### many taxa
+res <- occ_data(scientificName = c("Puma concolor", "Quercus lobata"), 
+   limit = 30)
+map_ggplot(res)
+
+### add a convex hull
 map_ggplot(res) + hull()
+
 
 ## data.frame
 df <- data.frame(name = c('Poa annua', 'Puma concolor', 'Foo bar'),

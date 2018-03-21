@@ -33,9 +33,20 @@
 #'
 #' ## rgbif
 #' library("rgbif")
+#' ### occ_search() output
 #' res <- occ_search(scientificName = "Puma concolor", limit = 100)
 #' map_ggmap(res)
+#' 
+#' ### occ_data() output
+#' res <- occ_data(scientificName = "Puma concolor", limit = 100)
+#' map_ggmap(res)
+#' 
+#' #### many taxa
+#' res <- occ_data(scientificName = c("Puma concolor", "Quercus lobata"), 
+#'    limit = 30)
+#' map_ggmap(res)
 #'
+#' 
 #' ## data.frame
 #' df <- data.frame(name = c('Poa annua', 'Puma concolor', 'Foo bar'),
 #'                  longitude = c(-120, -121, -123),
@@ -87,7 +98,18 @@ map_ggmap.gbif <- function(x, zoom = 3, point_color = "#86161f", color = NULL,
                            size = 3, lon = 'longitude', lat = 'latitude',
                            maptype = "terrain", source = "google", ...) {
   check_inputs(match.call())
-  x <- guess_latlon(x$data, lon = 'decimalLongitude', lat = 'decimalLatitude')
+  x <- if ("data" %in% names(x)) x$data else bdt(lapply(x, function(z) z$data))
+  x <- guess_latlon(x, lon = 'decimalLongitude', lat = 'decimalLatitude')
+  map_ggmapper(x, zoom, color, size, maptype, source)
+}
+
+#' @export
+map_ggmap.gbif_data <- function(x, zoom = 3, point_color = "#86161f", color = NULL,
+                           size = 3, lon = 'longitude', lat = 'latitude',
+                           maptype = "terrain", source = "google", ...) {
+  check_inputs(match.call())
+  x <- if ("data" %in% names(x)) x$data else bdt(lapply(x, function(z) z$data))
+  x <- guess_latlon(x, lon = 'decimalLongitude', lat = 'decimalLatitude')
   map_ggmapper(x, zoom, color, size, maptype, source)
 }
 

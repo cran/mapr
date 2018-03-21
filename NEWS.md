@@ -1,5 +1,14 @@
+mapr 0.4.0
+==========
+
+### MINOR IMPROVEMENTS
+
+* All `map_*()` functions now support `gbif_data` class from the `rgbif` package, which is the output of `rgbif::occ_data()` (#29)
+* Added `.github` files for contributing, issue and PR templates (#30)
+
+
 mapr 0.3.4
-==============
+==========
 
 ### MINOR IMPROVEMENTS
 
@@ -14,7 +23,7 @@ in the CRAN version soon, hopefully.
 
 
 mapr 0.3.0
-==============
+==========
 
 ### NEW FEATURES
 
@@ -26,7 +35,7 @@ thanks to @rossmounce for the feature request
 
 
 mapr 0.2.0
-==============
+==========
 
 ### NEW FEATURES
 

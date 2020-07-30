@@ -4,30 +4,42 @@
 \alias{map_plot}
 \title{Base R mapping}
 \usage{
-map_plot(x, lon = "longitude", lat = "latitude", color = NULL, size = 1,
-  pch = 16, hull = FALSE, ...)
+map_plot(
+  x,
+  lon = "longitude",
+  lat = "latitude",
+  color = NULL,
+  size = 1,
+  pch = 16,
+  hull = FALSE,
+  name = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{The data. An object of class \code{occdat}, \code{occdatind},
-\code{gbif}, \code{gbif_data}, \code{SpatialPoints}, 
-\code{SpatialPointsDataFrame}, or \code{data.frame}. The package 
+\code{gbif}, \code{gbif_data}, \code{SpatialPoints},
+\code{SpatialPointsDataFrame}, or \code{data.frame}. The package
 \pkg{spocc} needed for
 the first two, and \pkg{rgbif} needed for the third. When \code{data.frame}
 input, any number of columns allowed, but with at least the following:
 name (the taxonomic name), latitude (in dec. deg.), longitude (in dec. deg.)}
 
 \item{lon, lat}{(character) Longitude and latitude variable names. Ignored
-unless \code{data.frame} input to \code{x} parameter. We attempt to guess, 
-but if nothing close, we stop. Default: \code{longitude} and 
+unless \code{data.frame} input to \code{x} parameter. We attempt to guess,
+but if nothing close, we stop. Default: \code{longitude} and
 \code{latitude}}
 
 \item{color}{Default color of your points.}
 
-\item{size}{point size, Default: 1}
+\item{size}{point size, passed to \code{cex} Default: 1}
 
 \item{pch}{point symbol shape, Default: 16}
 
 \item{hull}{(logical) whether to add a convex hull. Default: \code{FALSE}}
+
+\item{name}{(character) the column name that contains the name to use in
+creating the map. If left \code{NULL} we look for a "name" column.}
 
 \item{...}{Further args to \code{\link[graphics:points]{graphics::points()}}}
 }
@@ -59,6 +71,7 @@ map_plot(out$gbif)
 map_plot(out$gbif, hull = TRUE)
 
 ## rgbif
+if (requireNamespace("rgbif")) {
 library("rgbif")
 ### occ_search() output
 res <- occ_search(scientificName = "Puma concolor", limit = 100)
@@ -73,6 +86,7 @@ res <- occ_data(scientificName = c("Puma concolor", "Quercus lobata"),
    limit = 30)
 res
 map_plot(res)
+}
 
 
 ## data.frame
@@ -107,9 +121,11 @@ map_plot(dat, color = c('#976AAE', '#6B944D', '#BD5945', 'red'))
 map_plot(dat, color = c('#976AAE', '#6B944D', '#BD5945', 'red'), hull = TRUE)
 
 # add a convex hull
+if (requireNamespace("rgbif")) {
 library("rgbif")
 res <- occ_search(scientificName = "Puma concolor", limit = 100)
 map_plot(res, hull = FALSE)
 map_plot(res, hull = TRUE)
+}
 }
 }

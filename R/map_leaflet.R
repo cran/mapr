@@ -5,9 +5,11 @@
 #' @template args
 #' @param color Default color of your points.
 #' @param size point size, Default: 13
+#' @param name (character) the column name that contains the name to use in 
+#' creating the map. If left `NULL` we look for a "name" column. 
 #' @param ... Ignored
 #' @details We add popups by default, and add all columns to the popup. The
-#' html is escaped with [htmltools::htmlEscape()]
+#' html is escaped with `htmltools::htmlEscape()`
 #' @return a Leaflet map in Viewer in Rstudio, or in your default browser
 #' otherwise
 #' @examples \dontrun{
@@ -23,9 +25,11 @@
 #' map_leaflet(occ2sp(out))
 #'
 #' ## rgbif
+#' if (requireNamespace("rgbif")) {
 #' library("rgbif")
 #' res <- occ_search(scientificName = "Puma concolor", limit = 100)
 #' map_leaflet(res)
+#' }
 #'
 #' ## SpatialPoints class
 #' library("sp")
@@ -35,6 +39,7 @@
 #' map_leaflet(x)
 #'
 #' ## SpatialPointsDataFrame class
+#' if (requireNamespace("rgbif")) {
 #' library("rgbif")
 #' ### occ_search() output
 #' res <- occ_search(scientificName = "Puma concolor", limit = 100)
@@ -47,6 +52,7 @@
 #' ### occ_data() output
 #' res <- occ_data(scientificName = "Puma concolor", limit = 100)
 #' map_leaflet(res)
+#' }
 #' 
 #' #### many taxa
 #' res <- occ_data(scientificName = c("Puma concolor", "Quercus lobata"), 
@@ -74,41 +80,45 @@
 #' hull(map_leaflet(dat))
 #' }
 map_leaflet <- function(x, lon = 'longitude', lat = 'latitude', color = NULL,
-                        size = 13, ...) {
+                        size = 13, name = NULL, ...) {
   UseMethod("map_leaflet")
 }
 
 #' @export
 map_leaflet.occdat <- function(x, lon = 'longitude', lat = 'latitude',
-                               color = NULL, size = 13, ...) {
-  make_map_ll(dat_cleaner(spocc::occ2df(x), lon, lat), color, size)
+  color = NULL, size = 13, name = NULL, ...) {
+
+  make_map_ll(dat_cleaner(spocc::occ2df(x), lon, lat, name), color, size)
 }
 
 #' @export
 map_leaflet.occdatind <- function(x, lon = 'longitude', lat = 'latitude',
-                                  color = NULL, size = 13, ...) {
-  make_map_ll(dat_cleaner(spocc::occ2df(x), lon, lat), color, size)
+  color = NULL, size = 13, name = NULL, ...) {
+  
+  make_map_ll(dat_cleaner(spocc::occ2df(x), lon, lat, name), color, size)
 }
 
 #' @export
 map_leaflet.SpatialPoints <- function(x, lon = 'longitude', lat = 'latitude',
-                                      color = NULL, size = 13, ...) {
+  color = NULL, size = 13, name = NULL, ...) {
+  
   make_map(x, color, size)
 }
 
 #' @export
-map_leaflet.SpatialPointsDataFrame <- function(x, lon = 'longitude',
-                                               lat = 'latitude',
-                                               color = NULL, size = 13, ...) {
+map_leaflet.SpatialPointsDataFrame <- function(x, lon = 'longitude', 
+  lat = 'latitude', color = NULL, size = 13, name = NULL, ...) {
+
   make_map(x, color, size)
 }
 
 #' @export
-map_leaflet.gbif <- function(x, lon = 'longitude', lat = 'latitude',
-                             color = NULL, size = 13, ...) {
+map_leaflet.gbif <- function(x, lon = 'longitude', lat = 'latitude', 
+  color = NULL, size = 13, name = NULL, ...) {
+
   x <- if ("data" %in% names(x)) x$data else bdt(lapply(x, function(z) z$data))
   make_map_ll(
-    dat_cleaner(x, lon = 'decimalLongitude', lat = 'decimalLatitude'),
+    dat_cleaner(x, lon = 'decimalLongitude', lat = 'decimalLatitude', name),
     color = color,
     size = size
   )
@@ -116,10 +126,11 @@ map_leaflet.gbif <- function(x, lon = 'longitude', lat = 'latitude',
 
 #' @export
 map_leaflet.gbif_data <- function(x, lon = 'longitude', lat = 'latitude',
-                             color = NULL, size = 13, ...) {
+  color = NULL, size = 13, name = NULL, ...) {
+
   x <- if ("data" %in% names(x)) x$data else bdt(lapply(x, function(z) z$data))
   make_map_ll(
-    dat_cleaner(x, lon = 'decimalLongitude', lat = 'decimalLatitude'),
+    dat_cleaner(x, lon = 'decimalLongitude', lat = 'decimalLatitude', name),
     color = color,
     size = size
   )
@@ -127,13 +138,15 @@ map_leaflet.gbif_data <- function(x, lon = 'longitude', lat = 'latitude',
 
 #' @export
 map_leaflet.data.frame <- function(x, lon = 'longitude', lat = 'latitude',
-                                   color = NULL, size = 13, ...) {
-  make_map_ll(dat_cleaner(x, lon, lat), color, size)
+  color = NULL, size = 13, name = NULL, ...) {
+  
+  make_map_ll(dat_cleaner(x, lon, lat, name), color, size)
 }
 
 #' @export
 map_leaflet.default <- function(x, lon = 'longitude', lat = 'latitude',
-                                color = NULL, size = 13, ...) {
+  color = NULL, size = 13, name = NULL, ...) {
+  
   stop(
     sprintf("map_leaflet does not support input of class '%s'", class(x)),
     call. = FALSE
@@ -141,11 +154,6 @@ map_leaflet.default <- function(x, lon = 'longitude', lat = 'latitude',
 }
 
 # helpers ------------------------------------
-dat_cleaner <- function(x, lon = 'longitude', lat = 'latitude') {
-  x <- guess_latlon(x, lat, lon)
-  x[stats::complete.cases(x$latitude, x$longitude), ]
-}
-
 make_map <- function(x, color, size) {
   lf <- leaflet::leaflet(data = x)
   lf <- leaflet::addTiles(lf)

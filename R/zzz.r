@@ -34,3 +34,27 @@ bdt <- function(x) {
     data.table::rbindlist(x, fill = TRUE, use.names = TRUE)
   ))
 }
+
+check_name <- function(x, name = NULL) {
+  if (!is.null(name)) {
+    if (!name %in% names(x)) {
+      stop(sprintf("'%s' not found in the data", name),
+        call. = FALSE)
+    }
+    if ("name" %in% names(x)) {
+      if (name != "name") {
+        message("existing 'name' column found; setting it to 'name_old'")
+        names(x)[which(names(x) == "name")] <- "name_old"
+      }
+    }
+    names(x)[which(names(x) == name)] <- "name"
+  }
+  return(x)
+}
+
+dat_cleaner <- function(x, lon = 'longitude', lat = 'latitude', name = NULL) {
+  x <- guess_latlon(x, lat, lon)
+  x <- x[stats::complete.cases(x$latitude, x$longitude), ]
+  x <- check_name(x, name)
+  return(x)
+}

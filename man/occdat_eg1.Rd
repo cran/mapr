@@ -4,9 +4,14 @@
 \name{occdat_eg1}
 \alias{occdat_eg1}
 \title{Example dataset: output from call to \code{\link[spocc:occ]{spocc::occ()}}}
-\format{A data frame with 25 rows and 62 variables}
+\format{
+A data frame with 25 rows and 62 variables
+}
 \description{
 A dataset with 25 rows, and 62 columns, from the query:
-\code{spocc::occ(query='Accipiter striatus', from='gbif', limit=25, has_coords=T)}
+\code{occ(query='Accipiter striatus', from='gbif', limit=25, has_coords=TRUE)}
+}
+\details{
+See \code{inst/ignore/datasets.R} for the code to prepare this dataaset
 }
 \keyword{datasets}

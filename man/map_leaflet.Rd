@@ -4,26 +4,36 @@
 \alias{map_leaflet}
 \title{Make interactive maps with Leaflet.js}
 \usage{
-map_leaflet(x, lon = "longitude", lat = "latitude", color = NULL,
-  size = 13, ...)
+map_leaflet(
+  x,
+  lon = "longitude",
+  lat = "latitude",
+  color = NULL,
+  size = 13,
+  name = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{The data. An object of class \code{occdat}, \code{occdatind},
-\code{gbif}, \code{gbif_data}, \code{SpatialPoints}, 
-\code{SpatialPointsDataFrame}, or \code{data.frame}. The package 
+\code{gbif}, \code{gbif_data}, \code{SpatialPoints},
+\code{SpatialPointsDataFrame}, or \code{data.frame}. The package
 \pkg{spocc} needed for
 the first two, and \pkg{rgbif} needed for the third. When \code{data.frame}
 input, any number of columns allowed, but with at least the following:
 name (the taxonomic name), latitude (in dec. deg.), longitude (in dec. deg.)}
 
 \item{lon, lat}{(character) Longitude and latitude variable names. Ignored
-unless \code{data.frame} input to \code{x} parameter. We attempt to guess, 
-but if nothing close, we stop. Default: \code{longitude} and 
+unless \code{data.frame} input to \code{x} parameter. We attempt to guess,
+but if nothing close, we stop. Default: \code{longitude} and
 \code{latitude}}
 
 \item{color}{Default color of your points.}
 
 \item{size}{point size, Default: 13}
+
+\item{name}{(character) the column name that contains the name to use in
+creating the map. If left \code{NULL} we look for a "name" column.}
 
 \item{...}{Ignored}
 }
@@ -36,7 +46,7 @@ Make interactive maps with Leaflet.js
 }
 \details{
 We add popups by default, and add all columns to the popup. The
-html is escaped with \code{\link[htmltools:htmlEscape]{htmltools::htmlEscape()}}
+html is escaped with \code{htmltools::htmlEscape()}
 }
 \examples{
 \dontrun{
@@ -52,9 +62,11 @@ map_leaflet(out$gbif)
 map_leaflet(occ2sp(out))
 
 ## rgbif
+if (requireNamespace("rgbif")) {
 library("rgbif")
 res <- occ_search(scientificName = "Puma concolor", limit = 100)
 map_leaflet(res)
+}
 
 ## SpatialPoints class
 library("sp")
@@ -64,6 +76,7 @@ x <- SpatialPoints(df)
 map_leaflet(x)
 
 ## SpatialPointsDataFrame class
+if (requireNamespace("rgbif")) {
 library("rgbif")
 ### occ_search() output
 res <- occ_search(scientificName = "Puma concolor", limit = 100)
@@ -76,6 +89,7 @@ map_leaflet(x)
 ### occ_data() output
 res <- occ_data(scientificName = "Puma concolor", limit = 100)
 map_leaflet(res)
+}
 
 #### many taxa
 res <- occ_data(scientificName = c("Puma concolor", "Quercus lobata"), 

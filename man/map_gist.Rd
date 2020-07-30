@@ -4,13 +4,21 @@
 \alias{map_gist}
 \title{Make an interactive map to view in the browser as a GitHub gist}
 \usage{
-map_gist(x, description = "", public = TRUE, browse = TRUE,
-  lon = "longitude", lat = "latitude", ...)
+map_gist(
+  x,
+  description = "",
+  public = TRUE,
+  browse = TRUE,
+  lon = "longitude",
+  lat = "latitude",
+  name = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{The data. An object of class \code{occdat}, \code{occdatind},
-\code{gbif}, \code{gbif_data}, \code{SpatialPoints}, 
-\code{SpatialPointsDataFrame}, or \code{data.frame}. The package 
+\code{gbif}, \code{gbif_data}, \code{SpatialPoints},
+\code{SpatialPointsDataFrame}, or \code{data.frame}. The package
 \pkg{spocc} needed for
 the first two, and \pkg{rgbif} needed for the third. When \code{data.frame}
 input, any number of columns allowed, but with at least the following:
@@ -24,9 +32,12 @@ default (=no description)}
 \item{browse}{If \code{TRUE} (default) the map opens in your default browser.}
 
 \item{lon, lat}{(character) Longitude and latitude variable names. Ignored
-unless \code{data.frame} input to \code{x} parameter. We attempt to guess, 
-but if nothing close, we stop. Default: \code{longitude} and 
+unless \code{data.frame} input to \code{x} parameter. We attempt to guess,
+but if nothing close, we stop. Default: \code{longitude} and
 \code{latitude}}
+
+\item{name}{(character) the column name that contains the name to use in
+creating the map. If left \code{NULL} we look for a "name" column.}
 
 \item{...}{Further arguments passed on to \code{\link[=style_geojson]{style_geojson()}}}
 }
@@ -60,6 +71,7 @@ map_gist(dat, color=c('#976AAE','#6B944D','#BD5945'),
 map_gist(dat, symbol=c('park','zoo','garden'))
 
 ## rgbif
+if (requireNamespace("rgbif")) {
 library("rgbif")
 ### occ_search() output
 res <- occ_search(scientificName = "Puma concolor", limit = 100)
@@ -74,7 +86,7 @@ res <- occ_data(scientificName = c("Puma concolor", "Quercus lobata"),
    limit = 30)
 res
 map_gist(res)
-
+}
 
 ## data.frame
 df <- data.frame(name = c('Poa annua', 'Puma concolor', 'Foo bar'),
